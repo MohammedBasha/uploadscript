@@ -8,8 +8,31 @@
     $image_temp = $image['tmp_name'];
     $image_size = $image['size'];
 
-    // moving the uploaded image from the temporary directory to the project image's directory
-    move_uploaded_file($image_temp, $_SERVER['DOCUMENT_ROOT'] . '\uploadscript\images\\' . $image_name);
+    // Setting the errors in an array
+    $errors = [];
+
+    // Checking if the image size not greater thant 100k bytes
+    if ($image_size > 100000):
+      $errors[] = '<div>The image size must not be more than 100k bytes</div>';
+    endif;
+
+    // Uploading the image if there are not any errors
+    if(empty($errors)):
+      
+      // moving the uploaded image from the temporary directory to the project image's directory
+      move_uploaded_file($image_temp, $_SERVER['DOCUMENT_ROOT'] . '\uploadscript\images\\' . $image_name);
+      
+      echo 'Image uploaded';
+
+      // If there are any errors, print them
+      else:
+
+        foreach($errors as $error):
+          echo $error;
+        endforeach;
+
+    endif;
+
   endif;
 ?>
 
