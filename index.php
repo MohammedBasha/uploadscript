@@ -12,6 +12,9 @@
     // Setting the allowed image extensions
     $allowed_extensions = ['jpg', 'gif', 'jpeg', 'png'];
 
+    // Setting the images names for database users
+    $all_images = [];
+
     // Checking if there are files
     if ($image_error[0] == 4):
 
@@ -24,7 +27,7 @@
 
       // Looping through each image
       for ($i = 0; $i < $images_count; $i++) {
-        
+
         // Setting the errors in an array
         $errors = [];
 
@@ -41,20 +44,24 @@
         if ($image_size[$i] > 10000000):
           $errors[] = '<div>The image size must not be more than 100k bytes</div>';
         endif;
+
+        // Setting a new name for each image image
+        $image_random[$i] = rand(0, 1000000000000) . '.' . $refined_image_extension[$i];
   
         // Uploading the images if there are not any errors
         if(empty($errors)):
           
           // moving the uploaded images from the temporary directory to the project images's directory
-          move_uploaded_file($image_temp[$i], $_SERVER['DOCUMENT_ROOT'] . '\uploadscript\images\\' . $image_name[$i]);
+          move_uploaded_file($image_temp[$i], realpath(dirname(getcwd())) . '\uploadscript\images\\' . $image_random[$i]);
           
           echo '<div>Image ' . ($i + 1) . ' uploaded</div>';
+          $all_images[] = $image_random[$i];
   
           // If there are any errors, print them
           else:
   
-            echo '<div>Image ' . ($i + 1) . ' error</div><div>';
-  
+            echo '<div class="image-error-main">Image ' . ($i + 1) . ' error</div>';
+            echo '<div class="image-error-sub">';
             foreach($errors as $error):
               echo $error;
             endforeach;
@@ -64,6 +71,12 @@
         endif;
       }
 
+    endif;
+
+    if(!empty($all_images)):
+      print_r($all_images);
+      $image_db_field = implode(',' , $all_images);
+      echo $image_db_field;
     endif;
 
   endif;
