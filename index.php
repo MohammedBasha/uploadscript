@@ -9,46 +9,60 @@
     $image_size = $image['size'];
     $image_error = $image['error'];
 
-    // Setting the errors in an array
-    $errors = [];
-
     // Setting the allowed image extensions
     $allowed_extensions = ['jpg', 'gif', 'jpeg', 'png'];
 
-    // Getting the image type
-    $image_extension = explode('.', $image_name);
-    $refined_image_extension = strtolower(end($image_extension));
+    // Checking if there are files
+    if ($image_error[0] == 4):
 
-    // Checking if there is a file
-    if ($image_error == 4):
-      $errors[] = '<div>No file was chosen</div>';
+      echo '<div>No files were chosen.</div>';
 
     else:
-      // Checking the valid image types
-      if (!in_array($refined_image_extension, $allowed_extensions)):
-        $errors[] = '<div>Allowed image types are jpg, gif, jpeg and png only</div>';
-      endif;
 
-      // Checking if the image size not greater thant 100k bytes
-      if ($image_size > 10000000):
-        $errors[] = '<div>The image size must not be more than 100k bytes</div>';
-      endif;
-    endif;
+      // Counting the uploaded images
+      $images_count = count($image_name);
 
-    // Uploading the image if there are not any errors
-    if(empty($errors)):
-      
-      // moving the uploaded image from the temporary directory to the project image's directory
-      move_uploaded_file($image_temp, $_SERVER['DOCUMENT_ROOT'] . '\uploadscript\images\\' . $image_name);
-      
-      echo 'Image uploaded';
+      // Looping through each image
+      for ($i = 0; $i < $images_count; $i++) {
+        
+        // Setting the errors in an array
+        $errors = [];
 
-      // If there are any errors, print them
-      else:
+        // Getting the images types
+        $image_extension[$i] = explode('.', $image_name[$i]);
+        $refined_image_extension[$i] = strtolower(end($image_extension[$i]));
+        
+        // Checking the valid images types
+        if (!in_array($refined_image_extension[$i], $allowed_extensions)):
+          $errors[] = '<div>Allowed image types are jpg, gif, jpeg and png only</div>';
+        endif;
+  
+        // Checking if the images size not greater thant 100k bytes
+        if ($image_size[$i] > 10000000):
+          $errors[] = '<div>The image size must not be more than 100k bytes</div>';
+        endif;
+  
+        // Uploading the images if there are not any errors
+        if(empty($errors)):
+          
+          // moving the uploaded images from the temporary directory to the project images's directory
+          move_uploaded_file($image_temp[$i], $_SERVER['DOCUMENT_ROOT'] . '\uploadscript\images\\' . $image_name[$i]);
+          
+          echo '<div>Image ' . ($i + 1) . ' uploaded</div>';
+  
+          // If there are any errors, print them
+          else:
+  
+            echo '<div>Image ' . ($i + 1) . ' error</div><div>';
+  
+            foreach($errors as $error):
+              echo $error;
+            endforeach;
 
-        foreach($errors as $error):
-          echo $error;
-        endforeach;
+            echo '</div>';
+  
+        endif;
+      }
 
     endif;
 
@@ -71,7 +85,7 @@
   <body>
     
     <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
-      <input type="file" name="upload_file" value=""><br><br>
+      <input type="file" name="upload_file[]" multiple="multiple"><br><br>
       <input type="submit" value="Upload" value="">
     </form>
 
