@@ -11,6 +11,18 @@
     // Setting the errors in an array
     $errors = [];
 
+    // Setting the allowed image extensions
+    $allowed_extensions = ['jpg', 'gif', 'jpeg', 'png'];
+
+    // Getting the image type
+    $image_extension = explode('.', $image_name);
+    $refined_image_extension = strtolower(end($image_extension));
+
+    // Checking the valid image types
+    if (!in_array($refined_image_extension, $allowed_extensions)):
+      $errors[] = '<div>Allowed image types are jpg, gif, jpeg and png only</div>';
+    endif;
+
     // Checking if the image size not greater thant 100k bytes
     if ($image_size > 100000):
       $errors[] = '<div>The image size must not be more than 100k bytes</div>';
