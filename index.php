@@ -1,3 +1,18 @@
+<?php
+  if($_SERVER['REQUEST_METHOD'] == 'POST'):
+
+    // Getting the image data in variables
+    $image = $_FILES['upload_file'];
+    $image_name = $image['name'];
+    $image_type = $image['type'];
+    $image_temp = $image['tmp_name'];
+    $image_size = $image['size'];
+
+    // moving the uploaded image from the temporary directory to the project image's directory
+    move_uploaded_file($image_temp, $_SERVER['DOCUMENT_ROOT'] . '\uploadscript\images\\' . $image_name);
+  endif;
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -13,7 +28,10 @@
   </head>
   <body>
     
-
+    <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
+      <input type="file" name="upload_file" value=""><br><br>
+      <input type="submit" value="Upload" value="">
+    </form>
 
     
   </body>
