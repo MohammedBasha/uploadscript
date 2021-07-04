@@ -7,6 +7,7 @@
     $image_type = $image['type'];
     $image_temp = $image['tmp_name'];
     $image_size = $image['size'];
+    $image_error = $image['error'];
 
     // Setting the errors in an array
     $errors = [];
@@ -18,14 +19,20 @@
     $image_extension = explode('.', $image_name);
     $refined_image_extension = strtolower(end($image_extension));
 
-    // Checking the valid image types
-    if (!in_array($refined_image_extension, $allowed_extensions)):
-      $errors[] = '<div>Allowed image types are jpg, gif, jpeg and png only</div>';
-    endif;
+    // Checking if there is a file
+    if ($image_error == 4):
+      $errors[] = '<div>No file was chosen</div>';
 
-    // Checking if the image size not greater thant 100k bytes
-    if ($image_size > 100000):
-      $errors[] = '<div>The image size must not be more than 100k bytes</div>';
+    else:
+      // Checking the valid image types
+      if (!in_array($refined_image_extension, $allowed_extensions)):
+        $errors[] = '<div>Allowed image types are jpg, gif, jpeg and png only</div>';
+      endif;
+
+      // Checking if the image size not greater thant 100k bytes
+      if ($image_size > 10000000):
+        $errors[] = '<div>The image size must not be more than 100k bytes</div>';
+      endif;
     endif;
 
     // Uploading the image if there are not any errors
