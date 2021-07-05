@@ -52,7 +52,7 @@
         if(empty($errors)):
           
           // moving the uploaded images from the temporary directory to the project images's directory
-          move_uploaded_file($image_temp[$i], realpath(dirname(getcwd())) . '\uploadscript\images\\' . $image_random[$i]);
+          move_uploaded_file($image_temp[$i], realpath(dirname(getcwd())) . '\uploadscript\images\\' . $image_random[$i]); // in the server use '/uploadscript/images/' instead
           
           echo '<div>Image ' . ($i + 1) . ' uploaded</div>';
           $all_images[] = $image_random[$i];
